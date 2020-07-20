@@ -1,0 +1,94 @@
+<html>
+<head>
+<title>Demo of CRUD using JavaScript</title>
+<script>
+
+
+function allActions(){
+var uid4 = document.getElementById("uid4").value;
+//Get User Details 
+alert("Getting User Data for Id :"+uid4);
+fetch('https://jsonplaceholder.typicode.com/users/'+uid4+'')
+  .then(function(response) { 
+	if(response.status !== 200){ //check status code
+		console.error(' Reponse : ' + response.status);
+	}
+    console.log(`status: ${response.status}`); // check Responose
+    console.dir(response.body);
+    return response.json()
+  })
+  
+					/*console.log(response.headers.get('Content-Type'));
+					console.log(response.headers.get('Date'));
+					console.log(response.status);
+					console.log(response.statusText);
+					console.log(response.type);
+					console.log(response.url); 
+					*/
+  //Extract Response Data and use it next actions
+  //alert("Extracting User Data for "+ myJson.name)
+  .then(function(myJson) {
+    document.write(
+      `UserId: ${myJson.id} <br/>
+	   User: ${myJson.name} <br/>
+       Email: ${myJson.email} <br />
+	   Phone: ${myJson.phone} <br />
+       Website: ${myJson.website}`
+    );
+	
+	alert(myJson.name)
+
+	// Update User from previous response
+	alert("Updating(POST) User Data for: "+ myJson.name)
+	fetch('https://jsonplaceholder.typicode.com/users', {
+		method: 'POST',
+		body: JSON.stringify({
+		id: myJson.id,
+		name: myJson.name,
+		email: myJson.email,
+		website: myJson.website,
+		phone: myJson.phone		
+      }),
+      headers: {
+      "Content-type": "application/json; charset=UTF-8"
+      }
+    })
+	
+	// Create User from previous response
+	alert("Create(PUT) User Data with: "+ myJson.name)
+	fetch('https://jsonplaceholder.typicode.com/users/'+myJson.id+'', {
+		method: 'PUT',
+		body: JSON.stringify({
+		id: myJson.id,
+		name: myJson.name,
+		email: myJson.email,
+		website: myJson.website,
+		phone: myJson.phone
+      }),
+      headers: {
+      "Content-type": "application/json; charset=UTF-8"
+      }
+    })
+	
+	// Delete User 
+	alert("Deleting(DELETE) User : "+ myJson.name)
+	
+	fetch('https://jsonplaceholder.typicode.com/users/'+myJson.id+'', {
+		method: 'DELETE',
+	})
+	
+    return myJson
+  })
+  .then(console.log)
+	
+}	
+</script>
+</head>
+<body>
+<br><br>
+Enter User Id to perf CRUD operations<br>
+User Id:<input type="text" id="uid4" name="uid4">
+<button type="button" onclick="allActions()">CRUD</button>
+<br><br>
+</body>
+</html>
